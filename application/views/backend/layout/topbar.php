@@ -9,8 +9,8 @@
         </li>
         <li class="nav-item mr-auto">
           <a class="navbar-brand" href="<?= base_url();?>admin">
-            <img class="brand-logo" alt="ORM FLORIST" src="<?= base_url();?>assets/images/logo/thumbnail.png" width="30px" height="25px">
-            <h2 class="brand-text">ORM</h2>
+           <!--  <img class="brand-logo" alt="AHP - Topsis" src="<?= base_url();?>assets/images/logo/thumbnail.png" width="30px" height="25px"> -->
+            <h2 class="brand-text">AHP-TOPSIS</h2>
           </a>
         </li>
         <li class="nav-item d-none d-md-block nav-toggle">
