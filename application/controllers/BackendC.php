@@ -26,6 +26,34 @@ class BackendC extends CI_Controller{
 			8 => '8',
 			9 => '9',
 		);
+
+
+		if(isset($_POST['save_perbandingan'])){
+			$jumlah_kriteria = 5;
+			$array1 = array();
+			$k = 0;
+			$l = 0;
+			for($i=0;$i<$jumlah_kriteria;$i++)
+			{
+				for($j=$k;$j<$jumlah_kriteria;$j++)
+				{
+					if($i==$j)
+					{
+						$array1[$i][$j] = 1;
+					}
+					else
+					{
+						$array1[$i][$j] = $this->input->post('bobot'.$l);
+						$array1[$j][$i] = round(1/$array1[$i][$j],3);
+						$l++;				
+					}
+				}
+				$k++;
+			}
+
+			$this->data['ksd'] = $array1;
+
+		}
 		$this->load->view('backend/layout/header',$y);
 		$this->load->view('backend/layout/topbar');
 		$this->load->view('backend/layout/sidebar');
@@ -40,7 +68,6 @@ class BackendC extends CI_Controller{
 		$array1 = array();
 		$k = 0;
 		$l = 0;
-			//membuat matriks perbandingan berpasangan 
 		for($i=0;$i<$jumlah_kriteria;$i++)
 		{
 			for($j=$k;$j<$jumlah_kriteria;$j++)
@@ -77,81 +104,81 @@ class BackendC extends CI_Controller{
 			}
 		}
 
-  $nk = array();
-                    for ($i=0;$i<count($x[0]);$i++)
-                    {
-                      for ($j=0;$j<count($x[0]);$j++)
-                      {     
-                        $nk[$i][$j] = $k[$i][$j] / $jk[$j];
-                      }
-                    }
+		$nk = array();
+		for ($i=0;$i<count($x[0]);$i++)
+		{
+			for ($j=0;$j<count($x[0]);$j++)
+			{     
+				$nk[$i][$j] = $k[$i][$j] / $jk[$j];
+			}
+		}
 
 
 
-                    $jnk = array();
-                    for ($i=0;$i<count($x[0]);$i++)
-                    {
-                      $jnk[$i] = 0;
-                      for ($j=0;$j<count($x[0]);$j++)
-                      {     
-                        $jnk[$i] += $nk[$i][$j]; 
-                      }
-                    }
+		$jnk = array();
+		for ($i=0;$i<count($x[0]);$i++)
+		{
+			$jnk[$i] = 0;
+			for ($j=0;$j<count($x[0]);$j++)
+			{     
+				$jnk[$i] += $nk[$i][$j]; 
+			}
+		}
 
-                    $w = array();
-                    for ($i=0;$i<count($x[0]);$i++)
-                    {
-                      $w[$i] = $jnk[$i] / count($x[0]); 
-                    }
-
-
-
-                    $kw = array();
-                    for ($i=0;$i<count($x[0]);$i++)
-                    {
-                      $kw[$i] = 0;
-                      for ($j=0;$j<count($x[0]);$j++)
-                      {     
-                        $kw[$i] += $k[$i][$j] * $w[$j]; 
-                      }
-                    }
+		$w = array();
+		for ($i=0;$i<count($x[0]);$i++)
+		{
+			$w[$i] = $jnk[$i] / count($x[0]); 
+		}
 
 
 
-                    $t=0;
-                    for ($i=0;$i<count($x[0]);$i++)
-                    {
-                      $t += $kw[$i] / $w[$i]; 
-                    }
-                    $t = $t / count($x[0]);
-                    $ci = ($t - count($x[0])) / (count($x[0]) - 1);
-                    if (count($x[0]) == 3)
-                    {
-                      $ri = 0.58;
-                    }
-                    else if (count($x[0]) == 4)
-                    {
-                      $ri = 0.9;
-                    }
-                    else if (count($x[0]) == 5)
-                    {
-                      $ri = 1.12;
-                    }
-                    else if (count($x[0]) == 6)
-                    {
-                      $ri = 1.24;
-                    }
-                    else if (count($x[0]) <= 2)
-                    {
-                      $ri = 0.01;
-                    }
-                    else 
-                    {
-                      $ri = 1.32;
-                    } 
-                    $cr = $ci / $ri;
+		$kw = array();
+		for ($i=0;$i<count($x[0]);$i++)
+		{
+			$kw[$i] = 0;
+			for ($j=0;$j<count($x[0]);$j++)
+			{     
+				$kw[$i] += $k[$i][$j] * $w[$j]; 
+			}
+		}
 
-                    echo "<pre>".var_dump($ci)."</pre>";
+
+
+		$t=0;
+		for ($i=0;$i<count($x[0]);$i++)
+		{
+			$t += $kw[$i] / $w[$i]; 
+		}
+		$t = $t / count($x[0]);
+		$ci = ($t - count($x[0])) / (count($x[0]) - 1);
+		if (count($x[0]) == 3)
+		{
+			$ri = 0.58;
+		}
+		else if (count($x[0]) == 4)
+		{
+			$ri = 0.9;
+		}
+		else if (count($x[0]) == 5)
+		{
+			$ri = 1.12;
+		}
+		else if (count($x[0]) == 6)
+		{
+			$ri = 1.24;
+		}
+		else if (count($x[0]) <= 2)
+		{
+			$ri = 0.01;
+		}
+		else 
+		{
+			$ri = 1.32;
+		} 
+		$cr = $ci / $ri;
+
+		echo "<pre>".var_dump($ci)."</pre>";
 
 		print_r($jk);
 
