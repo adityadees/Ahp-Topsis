@@ -65,7 +65,7 @@
         </form>
 
         <div class="row match-height">
-          <div class="col-xl-8 col-lg-12">
+          <div class="col-xl-12 col-lg-12">
             <div class="card">
               <div class="card-header">
                 <h4 class="card-title">Recent Orders</h4>
@@ -82,261 +82,168 @@
                   <p>Data Transaksi Terakhir.</p>
 
                   <?php
-class topsis{ //topsis class
+                  $alternatif = $this->db->query("SELECT * FROM alternatif order by alternatif_kode asc");
+                  $nilai = $this->db->query("SELECT * FROM `nilai` LEFT join parameter on nilai.parameter_id=parameter.parameter_id")->result();
+                  class topsis{ 
 
 
-  public function pembagi($data){ //### Step 1 ###
-    /*
-    * Create an evaluation matrix consisting of m alternatives and n criteria, with the intersection of each alternative and criteria given as {\displaystyle x_{ij}} x_{ij}, we therefore have a matrix 
-    */
-    for($kolom = 0; $kolom < count($data[0]);$kolom++){
-      $jumlahBaris = 0;
-      for($baris = 0; $baris < count($data);$baris++){
-        $jumlahBaris += pow($data[$baris][$kolom]['nilai'], 2);
-      }
-      $hasil[$kolom] = sqrt($jumlahBaris);
-    }
-    return $hasil;
-  }
+                    public function baseKriteria($qKriteria){
+                      $arKriteria = [];
+                      $i=0;
+                      foreach ($qKriteria->result()  as $vKriteria):
+                        $arKriteria[$i] = $vKriteria->kriteria_nama;
+                        $i++;
+                      endforeach;
+                      return $arKriteria;
+                    }
 
-  public function ternomalisasi($data, $pembagi){ //### step 2 ###
-    /*
-    * then normalised to form the matrix
-    */
-    for($kolom = 0; $kolom < count($data[0]);$kolom++){
-      for($baris = 0; $baris < count($data);$baris++){
-        $hasil[$baris][$kolom]['nilai'] = $data[$baris][$kolom]['nilai']/$pembagi[$kolom];
-        $hasil[$baris][$kolom]['id_kriteria'] = $data[$baris][$kolom]['id_kriteria'];
-        $hasil[$baris][$kolom]['id_alternatif'] = $data[$baris][$kolom]['id_alternatif'];
-      }
-    }
-    return $hasil;
-  }
+                    public function baseAlternatif($qAlternatif){
+                      $arAlternatif = [];
+                      $i=0;
+                      foreach ($qAlternatif->result()  as $vAlternatif):
+                        $arAlternatif[$i] = $vAlternatif->alternatif_nama;
+                        $i++;
+                      endforeach;
+                      return $arAlternatif;
+                    }
 
-  public function terbobot($ternomalisasi, $kepentingan){ //### step 3 ###
-    /*
-    * Calculate the weighted normalised decision matrix
-    */
-    for($kolom = 0; $kolom < count($ternomalisasi[0]);$kolom++){
-      for($baris = 0; $baris < count($ternomalisasi);$baris++){
-        $hasil[$baris][$kolom]['nilai'] = $ternomalisasi[$baris][$kolom]['nilai']*$kepentingan[$kolom];
-        $hasil[$baris][$kolom]['id_kriteria'] = $ternomalisasi[$baris][$kolom]['id_kriteria'];
-        $hasil[$baris][$kolom]['id_alternatif'] = $ternomalisasi[$baris][$kolom]['id_alternatif'];
-      }
-    }
-    return $hasil;
-  }
-  public function ideal_positif_negatif($terbobot, $sifat){ //### step 4 ###
-    /*
-    * Determine the worst ideal and best ideal
-    */
-    for($kolom = 0; $kolom < count($terbobot[0]);$kolom++){
-      $hasilKolomTerbesar = $terbobot[0][$kolom];
-      $hasilKolomTerkecil = $terbobot[0][$kolom];
-      for($baris = 0; $baris < count($terbobot);$baris++){
-        if($terbobot[$baris][$kolom] > $hasilKolomTerbesar){
-          $hasilKolomTerbesar = $terbobot[$baris][$kolom];
-        }
-        if($terbobot[$baris][$kolom] < $hasilKolomTerkecil){
-          $hasilKolomTerkecil = $terbobot[$baris][$kolom];
-        }
-      }
-      $hasil['positif'][$kolom] = $sifat[$kolom]=='benefit'?$hasilKolomTerbesar:$hasilKolomTerkecil;
-      $hasil['negatif'][$kolom] = $sifat[$kolom]=='benefit'?$hasilKolomTerkecil:$hasilKolomTerbesar;
-    }
-    return $hasil;
-  }
-  public function jarak_alternatif_positif($ideal_positif, $terbobot){ //### step 5 ###
-    /*
-    * Calculate the L2-distance between the target alternative i and the best condition 
-    */
-    for($baris = 0; $baris < count($terbobot);$baris++){
-      $jumlahBaris = 0;
-      for($kolom = 0; $kolom < count($terbobot[0]);$kolom++){
-        $jumlahBaris += pow(($terbobot[$baris][$kolom]['nilai']-$ideal_positif[$kolom]['nilai']), 2);
-      }
-      $hasil[$baris]['nilai'] = sqrt($jumlahBaris);
-      $hasil[$baris]['id_alternatif'] = $terbobot[$baris][0]['id_alternatif'];
-    }
-    return $hasil;
-  }
-  public function jarak_alternatif_negatif($ideal_negatif, $terbobot){ 
-    /*
-    * and the distance between the alternative {\displaystyle i} i and the worst condition
-    */
-    for($baris = 0; $baris < count($terbobot);$baris++){
-      $jumlahBaris = 0;
-      for($kolom = 0; $kolom < count($terbobot[0]);$kolom++){
-        $jumlahBaris += pow(($terbobot[$baris][$kolom]['nilai']-$ideal_negatif[$kolom]['nilai']), 2);
-      }
-      $hasil[$baris]['nilai'] = sqrt($jumlahBaris);
-      $hasil[$baris]['id_alternatif'] = $terbobot[$baris][0]['id_alternatif'];
-    }
-    return $hasil;
-  }
-  public function kedekatan_relative_terhadap_solusi_ideal($jarak_alternatif_negatif, $jarak_alternatif_positif){ //### step 6 ###
-    /*
-    * Calculate the similarity to the worst condition
-    */
-    for ($i=0; $i < count($jarak_alternatif_negatif); $i++) {
-      $hasil[$i]['nilai'] = $jarak_alternatif_negatif[$i]['nilai']/($jarak_alternatif_negatif[$i]['nilai']+$jarak_alternatif_positif[$i]['nilai']);
-      $hasil[$i]['id_alternatif'] = $jarak_alternatif_negatif[$i]['id_alternatif'];
-    }
-    $this->merangking_alternatif($hasil,"nilai");
-    return $hasil;
-  }
-  public function merangking_alternatif(&$array, $key){ //### step 7 ###
-    /*
-    * then rank alternative
-    */
-    $sorter=array();
-    $ret=array();
-    reset($array);
-    foreach ($array as $ii => $va) {
-      $sorter[$ii]=$va[$key];
-    }
-    arsort($sorter);
-    foreach ($sorter as $ii => $va) {
-      $ret[$ii]=$array[$ii];
-    }
-    $array=$ret;
-  }
-  public function tertinggi($arr){
-    /*
-    * then get highest rank
-    */
-    $hasil = reset($arr);
-    return $hasil;
-  }
-}
 
-$sifat = array('cost','benefit','benefit','benefit','benefit','benefit');
-$kepentingan = array(4,5,4,3,3,2);
-$matrix = array(
-  array(
-    array('nilai' => '3',
-      'id_alternatif' => '1',
-      'id_kriteria' => '1'),
-    array('nilai' => '4',
-      'id_alternatif' => '1',
-      'id_kriteria' => '2'),
-    array('nilai' => '2',
-      'id_alternatif' => '1',
-      'id_kriteria' => '3'),
-    array('nilai' => '3',
-      'id_alternatif' => '1',
-      'id_kriteria' => '4'),
-    array('nilai' => '3',
-      'id_alternatif' => '1',
-      'id_kriteria' => '5'),
-  ),
-  array(
-    array('nilai' => '2',
-      'id_alternatif' => '2',
-      'id_kriteria' => '1'),
-    array('nilai' => '5',
-      'id_alternatif' => '2',
-      'id_kriteria' => '2'),
-    array('nilai' => '4',
-      'id_alternatif' => '2',
-      'id_kriteria' => '3'),
-    array('nilai' => '1',
-      'id_alternatif' => '2',
-      'id_kriteria' => '4'),
-    array('nilai' => '4',
-      'id_alternatif' => '2',
-      'id_kriteria' => '5'),
-  ),
-  array(
-    array('nilai' => '4',
-      'id_alternatif' => '3',
-      'id_kriteria' => '1'),
-    array('nilai' => '4',
-      'id_alternatif' => '3',
-      'id_kriteria' => '2'),
-    array('nilai' => '5',
-      'id_alternatif' => '3',
-      'id_kriteria' => '3'),
-    array('nilai' => '4',
-      'id_alternatif' => '3',
-      'id_kriteria' => '4'),
-    array('nilai' => '3',
-      'id_alternatif' => '3',
-      'id_kriteria' => '5'),
-  ),
-);
+                    public function nilaiAlkrit($qAlternatif,$qKriteria,$qnilai){
+                      $arNAK = [];
+                      foreach ($qAlternatif->result()  as $i => $vAlternatif) :
+                        $vAlternatif1=$vAlternatif->alternatif_kode;
+                        foreach ($qKriteria->result()  as $j => $vKriteria) :
+                          $vKriteria1=$vKriteria->kriteria_kode;
 
-function display($arr, $echo = true){
-  $result = '<table border="1">';
-  foreach($arr as $key => $val){
-    $result.= '<tr>';
-    foreach($val as $k => $v){
-      $result.='<td>' . $v . '</td>';
-    }
-    $result.= '</tr>';
-  }
-  $result.= '</table>';
+                          foreach ($qnilai as $kk) {
+                           if($kk->alternatif_kode == $vAlternatif1 && $kk->kriteria_kode==$vKriteria1){
+                            $arNAK[$i][$j] = $kk->parameter_nilai;
+                          } 
+                        }
 
-  if($echo)
-    echo $result;
-  else
-    return $result;
-}
+                        $j++;
+                      endforeach;
+                      $i++;
+                    endforeach;
+                    return $arNAK;
+                  }
 
 
 
-$topsis = new topsis;
-$pembagi = $topsis->pembagi($matrix);
-$ternomalisasi = $topsis->ternomalisasi($matrix, $pembagi);
-$terbobot = $topsis->terbobot($ternomalisasi, $kepentingan);
-$ideal_positif_negatif = $topsis->ideal_positif_negatif($terbobot, $sifat);
-$jarak_alternatif_positif = $topsis->jarak_alternatif_positif($ideal_positif_negatif['positif'], $terbobot);
-$jarak_alternatif_negatif = $topsis->jarak_alternatif_negatif($ideal_positif_negatif['negatif'], $terbobot);
-$kedekatan_relative_terhadap_solusi_ideal = $topsis->kedekatan_relative_terhadap_solusi_ideal($jarak_alternatif_negatif, $jarak_alternatif_positif);
-$tertinggi = $topsis->tertinggi($kedekatan_relative_terhadap_solusi_ideal);
-/*echo 'Kepentingan <pre>';
-var_dump($kepentingan);*/
-/*echo 'Matrix <pre>';
-var_dump($matrix);*/
-/*echo 'Pembagi <pre>';
-var_dump($pembagi);
-echo '</pre><br><br>';*/
+                  public function pembagi($baseAlternatif,$baseKriteria,$nilaiAlkrit){
+                    $pembagi = array();
 
-echo '$ternomalisasi <pre>';
-var_dump($ternomalisasi);
-echo '</pre>';
-echo 'terbobot <pre>';
-var_dump($terbobot);
-echo '</pre><br><br>';
-echo 'ideal positif negatif <pre>';
-var_dump($ideal_positif_negatif);
-echo '</pre>';
-echo 'Jarak alternatif +<pre>';
-var_dump($jarak_alternatif_positif);
-echo '</pre><br><br>';
-echo 'Jarak alternatif - <pre>';
-var_dump($jarak_alternatif_negatif);
-echo '</pre>';
-echo '$kedekatan_relative_terhadap_solusi_ideal <pre>';
-var_dump($kedekatan_relative_terhadap_solusi_ideal);
-echo '</pre>';
-echo 'Tertinggi <pre>';
-var_dump($tertinggi);
-echo '</pre>';
+                    for ($i=0;$i<count($baseKriteria);$i++)
+                    {
+                      $pembagi[$i] = 0;
+                      for ($j=0;$j<count($baseAlternatif);$j++)
+                      {
+                        $pembagi[$i] = $pembagi[$i] + ($nilaiAlkrit[$j][$i] * $nilaiAlkrit[$j][$i]);
+                      }
+                      $pembagi[$i] = sqrt($pembagi[$i]);
+                    }
+                    return $pembagi;
+                  }
 
-?>
+                  public function normalisasi($baseAlternatif,$baseKriteria,$nilaiAlkrit,$pembagi){
+                    $normalisasi = array();
+                    for ($i=0;$i<count($baseAlternatif);$i++)
+                    {
+                      for ($j=0;$j<count($baseKriteria);$j++)
+                      {
+                        $normalisasi[$i][$j] = round($nilaiAlkrit[$i][$j] / $pembagi[$j],3);
+                      }
+                    }
+                    return $normalisasi;
+                  }
+
+                }
+
+
+                function display($arr, $echo = true){
+                  $result = '<table border="1">';
+                  foreach($arr as $key => $val){
+                    $result.= '<tr>';
+                    foreach($val as $k => $v){
+                      $result.='<td>' . $v . '</td>';
+                    }
+                    $result.= '</tr>';
+                  }
+                  $result.= '</table>';
+
+                  if($echo)
+                    echo $result;
+                  else
+                    return $result;
+                }
+
+
+
+                $topsis = new topsis;
+                $baseKriteria = $topsis->baseKriteria($kriteria);
+                $baseAlternatif = $topsis->baseAlternatif($alternatif);
+                $nilaiAlkrit = $topsis->nilaiAlkrit($alternatif,$kriteria,$nilai);
+                $pembagi = $topsis->pembagi($baseAlternatif,$baseKriteria,$nilaiAlkrit);
+                $normalisasi = $topsis->normalisasi($baseAlternatif,$baseKriteria,$nilaiAlkrit,$pembagi);
+
+                function showb($gdarray)
+                {
+                  echo '<div class="table table-responsive">';
+                  echo '<table class="table table-bordered">';
+                  echo '<tr>';
+                  for ($i=0;$i<count($gdarray);$i++)
+                  {
+                    echo '<td>'.$gdarray[$i].'</td>';
+                  }
+                  echo "</tr>";
+                  echo '</table>';
+                  echo '</div>';
+                }
+                function showt($gdarray)
+                {
+                  echo '<div class="table table-responsive">';
+                  echo '<table  class="table">';
+                  for ($i=0;$i<count($gdarray);$i++)
+                  {
+                    echo '<tr>';
+                    for ($j=0;$j<count($gdarray[$i]);$j++)
+                    {
+                      echo '<td>'.$gdarray[$i][$j].'</td>';
+                    }
+                    echo '</tr>';
+                  }
+                  echo '</table>';
+                  echo '</div>';
+                }
+
+
+                echo "Kriteria";
+                showb($baseKriteria);
+                echo "Alternatif";
+                showb($baseAlternatif);
+                echo "Nilai";
+                showt($nilaiAlkrit);
+                echo "pembagi";
+                showb($pembagi);
+                echo "<br>";
+                echo "Normalisasi";
+                showt($normalisasi);
+
+
+
+                ?>
 
 
 
 
 
-</div>
-</div>
-</div>
-</div>
-</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
-</div>
-</div>
+    </div>
+  </div>
 </div>

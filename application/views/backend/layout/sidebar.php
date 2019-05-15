@@ -12,44 +12,25 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="<?php echo base_url()?>admin/slider"><i class="ft-sliders"></i>
-          <span class="menu-title" data-i18n="">Slider</span>
+        <a href="<?php echo base_url()?>admin/alternatif"><i class="ft-command"></i>
+          <span class="menu-title" data-i18n="">Alternatif</span>
         </a>
       </li>
-      <li class=" nav-item"><a href="#"><i class="ft-layers"></i><span class="menu-title" data-i18n="">Kategori</span></a>
+      <li class=" nav-item"><a href="#"><i class="ft-layers"></i><span class="menu-title" data-i18n="">Kriteria</span></a>
         <ul class="menu-content">
-          <li class=""><a class="menu-item" href="<?php echo base_url();?>admin/kategori">Kategori</a></li>
-          <li class=""><a class="menu-item" href="<?php echo base_url();?>admin/subkategori">Sub-Kategori</a></li>
+          <li class=""><a class="menu-item" href="<?php echo base_url();?>admin/kriteria">Kriteria</a></li>
+          <li class=""><a class="menu-item" href="<?php echo base_url();?>admin/subkriteria">Sub-Kriteria</a></li>
         </ul>
       </li>
-      <li class=" nav-item"><a href="#"><i class="ft-package"></i><span class="menu-title" data-i18n="">Produk</span></a>
-        <ul class="menu-content">
-          <li class=""><a class="menu-item" href="<?php echo base_url();?>admin/produk">Data Produk</a></li>
-          <li class=""><a class="menu-item" href="<?php echo base_url();?>admin/promo">Promo</a></li>
-        </ul>
-      </li>
-
-
-      <li class=" nav-item"><a href="#"><i class="ft-shopping-cart"></i><span class="menu-title" data-i18n="">Transaksi</span></a>
-        <ul class="menu-content">
-          <li class=""><a class="menu-item" href="<?php echo base_url();?>admin/pemesanan">Pembelian</a></li>
-          <li class=""><a class="menu-item" href="<?php echo base_url();?>admin/pembayaran">Pembayaran</a></li>
-        </ul>
+      <li class="nav-item">
+        <a href="<?php echo base_url()?>admin/nilai"><i class="ft-credit-card"></i>
+          <span class="menu-title" data-i18n="">Penilaian</span>
+        </a>
       </li>
       
       <li class="nav-item">
-        <a href="<?php echo base_url()?>admin/rekening"><i class="ft-credit-card"></i>
-          <span class="menu-title" data-i18n="">Rekening</span>
-        </a>
-      </li>
-      <li class="nav-item">
         <a href="<?php echo base_url()?>admin/user"><i class="ft-user"></i>
           <span class="menu-title" data-i18n="">User</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a href="<?php echo base_url()?>admin/laporan"><i class="ft-printer"></i>
-          <span class="menu-title" data-i18n="">Laporan</span>
         </a>
       </li>
 

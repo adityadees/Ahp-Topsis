@@ -58,7 +58,7 @@ class BackendC extends CI_Controller{
 		$this->load->view('backend/layout/header',$y);
 		$this->load->view('backend/layout/topbar');
 		$this->load->view('backend/layout/sidebar');
-		$this->load->view('backend/top',$this->data);
+		$this->load->view('backend/index',$this->data);
 		$this->load->view('backend/layout/footer');
 	}
 	public function proses()
