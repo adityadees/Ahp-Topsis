@@ -128,15 +128,15 @@
 
                     function get_cm($matrix, $priority){
                       $arr = array();
-                      foreach($matrix as $key => $val){
-                        foreach($val as $k => $v){
-                          $arr[$key]+=$v * $priority[$k];
+                      foreach($matrix as $row){
+                        foreach($row as $key => $col){
+                          $arr[$key] += $col * $priority[$key];
                         }
                       }
 
-                      foreach($arr as $key => $val){
+                   /*   foreach($arr as $key => $val){
                         $arr[$key] = $val/$priority[$key];
-                      }
+                      }*/
                       return $arr;
                     }
 
@@ -145,7 +145,7 @@
 
                       $sum = array_sum($cm);
                       $count = count($cm); 
-                      $arr['ci'] = (($sum / $count) - $count) / ($count - 1);
+                      $arr['ci'] = round(($sum - $count) / ($count - 1),6);
 
                       $nRI = array (
                        1=>0,
@@ -165,7 +165,7 @@
                        15=>1.59
                      );
                       $arr['ri'] = $nRI[count($cm)];
-                      $arr['cr'] = $arr['ci'] / $arr['ri'];
+                      $arr['cr'] = round($arr['ci'] / $arr['ri'],5);
                       $arr['consistency'] =  $arr['cr']<=0.1 ? 'consistent' : 'inconsistent';
 
                       return $arr;
@@ -189,7 +189,7 @@
                       return $result;
                   }
 
-                
+
 
                   $ahp = new AHP($ksdx);
                   display($ksdx);
@@ -228,7 +228,7 @@
 
 
 
-                
+
                 </div>
               </div>
             </div>

@@ -4,10 +4,10 @@ class Loginadmin extends CI_Controller{
         parent:: __construct();
         $this->load->model('Mymod');
     }
-    function index(){
+   public function index(){
         $this->load->view('backend/login');
     }
-    function auth(){
+    public function auth(){
         $user_username=strip_tags(str_replace("'", "", $this->input->post('user_username',TRUE)));
         $user_password=strip_tags(str_replace("'", "", $this->input->post('user_password',TRUE)));
 
@@ -36,12 +36,12 @@ class Loginadmin extends CI_Controller{
     }
 
 
-    function gagallogin(){
+    public function gagallogin(){
         $this->session->set_flashdata('error', 'Username atau password anda salah');
         redirect('loginadmin');
     }
 
-    function logout(){
+    public function logout(){
         $this->session->sess_destroy();
         $url=base_url();
         redirect($url);
