@@ -15,6 +15,7 @@ class BackendC extends CI_Controller{
 		$y['title']='Dashboard';
 
 		$this->data['kriteria']     = $this->db->query("select * from kriteria order by kriteria_kode asc");
+		$this->data['alternatif']     = $this->db->query("select * from alternatif order by alternatif_kode asc");
 		$this->data['bobot'] = array(
 			1 => '1',
 			2 => '2',
@@ -57,7 +58,7 @@ class BackendC extends CI_Controller{
 		$this->load->view('backend/layout/header',$y);
 		$this->load->view('backend/layout/topbar');
 		$this->load->view('backend/layout/sidebar');
-		$this->load->view('backend/index',$this->data);
+		$this->load->view('backend/top',$this->data);
 		$this->load->view('backend/layout/footer');
 	}
 	public function proses()
