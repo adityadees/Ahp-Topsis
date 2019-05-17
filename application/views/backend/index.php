@@ -4,60 +4,63 @@
         </div>
         <div class="content-body">
           <?php
-          $count_kriteria = $kriteria->num_rows();
-          $all_kriteria   = $kriteria->result();
-          $ksdx   = $ksd;
 
-          error_reporting(~E_NOTICE);
-          class AHP{
+          $count_kriteria = count($kriteria);
+          $all_kriteria   = $kriteria;
 
-            function get_row_total($matrix){
-              $arr = array();
-              foreach($matrix as $row){
-                foreach($row as $key => $col){
-                  $arr[$key] += $col;
+          if (isset($ksd)) {
+            $ksdx   = $ksd;
+
+            error_reporting(~E_NOTICE);
+            class AHP{
+
+              function get_row_total($matrix){
+                $arr = array();
+                foreach($matrix as $row){
+                  foreach($row as $key => $col){
+                    $arr[$key] += $col;
+                  }
                 }
+                return $arr;
               }
-              return $arr;
-            }
 
-            function normalize($matrix, $row_total){
-              $arr = array();
-              foreach($matrix as $key => $val){
-                foreach($val as $k => $v){
-                  $arr[$key][$k] = round($v / $row_total[$k],9);
+              function normalize($matrix, $row_total){
+                $arr = array();
+                foreach($matrix as $key => $val){
+                  foreach($val as $k => $v){
+                    $arr[$key][$k] = round($v / $row_total[$k],9);
+                  }
                 }
+                return $arr;
               }
-              return $arr;
-            }
 
-            function get_priority($normal){
-              $arr = array();
-              foreach($normal as $key => $val){
-                $arr[$key] = round(array_sum($val) / count($val),6);
-              }
-              return $arr;
-            }   
-
-
-
-            function get_jumlah_normalisasi($normal){
-              $arr = array();
-              foreach($normal as $key => $val){
-                $arr[$key] = array_sum($val);
-              }
-              return $arr;
-            }   
-
-
-
-            function get_cm($matrix, $priority){
-              $arr = array();
-              foreach($matrix as $row){
-                foreach($row as $key => $col){
-                  $arr[$key] += $col * $priority[$key];
+              function get_priority($normal){
+                $arr = array();
+                foreach($normal as $key => $val){
+                  $arr[$key] = round(array_sum($val) / count($val),6);
                 }
-              }
+                return $arr;
+              }   
+
+
+
+              function get_jumlah_normalisasi($normal){
+                $arr = array();
+                foreach($normal as $key => $val){
+                  $arr[$key] = array_sum($val);
+                }
+                return $arr;
+              }   
+
+
+
+              function get_cm($matrix, $priority){
+                $arr = array();
+                foreach($matrix as $row){
+                  foreach($row as $key => $col){
+                    $arr[$key] += $col * $priority[$key];
+                  }
+                }
 
                    /*   foreach($arr as $key => $val){
                         $arr[$key] = $val/$priority[$key];
@@ -129,8 +132,8 @@
                   $consistency = $ahp->get_consistency($cm);
 
 
-                  $alternatif = $this->db->query("SELECT * FROM alternatif order by alternatif_kode asc");
-                  $nilai = $this->db->query("SELECT * FROM `nilai` LEFT join parameter on nilai.parameter_id=parameter.parameter_id")->result();
+               //   $alternatif = $this->db->query("SELECT * FROM alternatif order by alternatif_kode asc");
+                //  $nilai = $this->db->query("SELECT * FROM `nilai` LEFT join parameter on nilai.parameter_id=parameter.parameter_id")->result();
 
                   class topsis{ 
 
@@ -138,7 +141,7 @@
                     public function baseKriteria($qKriteria){
                       $arKriteria = [];
                       $i=0;
-                      foreach ($qKriteria->result()  as $vKriteria):
+                      foreach ($qKriteria  as $vKriteria):
                         $arKriteria[$i] = $vKriteria->kriteria_nama;
                         $i++;
                       endforeach;
@@ -148,7 +151,7 @@
                     public function baseAlternatif($qAlternatif){
                       $arAlternatif = [];
                       $i=0;
-                      foreach ($qAlternatif->result()  as $vAlternatif):
+                      foreach ($qAlternatif  as $vAlternatif):
                         $arAlternatif[$i] = $vAlternatif->alternatif_nama;
                         $i++;
                       endforeach;
@@ -158,9 +161,9 @@
 
                     public function nilaiAlkrit($qAlternatif,$qKriteria,$qnilai){
                       $arNAK = [];
-                      foreach ($qAlternatif->result()  as $i => $vAlternatif) :
+                      foreach ($qAlternatif  as $i => $vAlternatif) :
                         $vAlternatif1=$vAlternatif->alternatif_kode;
-                        foreach ($qKriteria->result()  as $j => $vKriteria) :
+                        foreach ($qKriteria  as $j => $vKriteria) :
                           $vKriteria1=$vKriteria->kriteria_kode;
 
                           foreach ($qnilai as $kk) {
@@ -415,84 +418,87 @@
                   echo '</table>';
                   echo '</div>';
                 }
-                ?>
+
+              }
+
+              ?>
 
 
 
 
-                <div class="row match-height">
-                  <div class="col-md-12 col-sm-12">
-                    <div class="card text-white  bg-teal bg-lighten-1 text-center">
-                      <div class="card-content">
-                        <div class="card-body">
-                          <h4 class="card-title mt-3">Form Kepentingan</h4>
+              <div class="row match-height">
+                <div class="col-md-12 col-sm-12">
+                  <div class="card text-white  bg-teal bg-lighten-1 text-center">
+                    <div class="card-content">
+                      <div class="card-body">
+                        <h4 class="card-title mt-3">Form Kepentingan</h4>
 
-                          <form method="POST" action="<?= base_url('backendc');?>">
-                            <div class="table-responsive">
-                              <table class="table table-bordered table-condensed table-hover  table-striped" id="kriteria">
-                                <thead>
-                                  <tr>
-                                    <?php if( $count_kriteria ): ?>
-                                      <th>Nama Kriteria</th>
-                                      <?php foreach ($all_kriteria as $key => $value): ?>
-                                        <th><?php echo $value->kriteria_nama; ?></th>
-                                      <?php endforeach; ?>
-                                    <?php endif; ?>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                 <?php  
-                                 $i=0;
-                                 $l = 0;
-                                 $m = $count_kriteria;
-                                 $b=0;
-                                 foreach($all_kriteria as $row)
-                                 {
+                        <form method="POST" action="<?= base_url('backendc');?>">
+                          <div class="table-responsive">
+                            <table class="table table-bordered table-condensed table-hover  table-striped" id="kriteria">
+                              <thead>
+                                <tr>
+                                  <?php if( $count_kriteria ): ?>
+                                    <th>Nama Kriteria</th>
+                                    <?php foreach ($all_kriteria as $key => $value): ?>
+                                      <th><?php echo $value->kriteria_nama; ?></th>
+                                    <?php endforeach; ?>
+                                  <?php endif; ?>
+                                </tr>
+                              </thead>
+                              <tbody>
+                               <?php  
+                               $i=0;
+                               $l = 0;
+                               $m = $count_kriteria;
+                               $b=0;
+                               foreach($all_kriteria as $row)
+                               {
 
-                                  echo '<tr>';
-                                  echo '<td>';
-                                  echo $row->kriteria_nama;
-                                  echo '</td>';
+                                echo '<tr>';
+                                echo '<td>';
+                                echo $row->kriteria_nama;
+                                echo '</td>';
 
-                                  for($k=0;$k<$l;$k++){
-                                    echo '<td> - </td>';
+                                for($k=0;$k<$l;$k++){
+                                  echo '<td> - </td>';
+                                }
+                                for($j=0;$j<$m;$j++) {
+                                  if($j==0){
+                                    echo '<td>';
+                                    echo '1';
+                                    echo '</td>';
+
+                                  }else{              
+                                    $bobot_dipilih = 1;
+                                    echo '<td>';
+                                    echo form_dropdown('bobot'.$b, $bobot, $bobot_dipilih, 'size="0"');
+                                    echo '</td>';
+                                    $b++;
                                   }
-                                  for($j=0;$j<$m;$j++) {
-                                    if($j==0){
-                                      echo '<td>';
-                                      echo '1';
-                                      echo '</td>';
-
-                                    }else{              
-                                      $bobot_dipilih = 1;
-                                      echo '<td>';
-                                      echo form_dropdown('bobot'.$b, $bobot, $bobot_dipilih, 'size="0"');
-                                      echo '</td>';
-                                      $b++;
-                                    }
-                                  }
-                                  $l++;
-                                  $m--;
-                                  echo '</tr>';
-                                  $i++;
-                                } ?>
-                              </tbody>
-                            </table>
-                          </div>
+                                }
+                                $l++;
+                                $m--;
+                                echo '</tr>';
+                                $i++;
+                              } ?>
+                            </tbody>
+                          </table>
+                        </div>
 
 
-                          <div class="col-md-12"><input type="submit" name="save_perbandingan" class="btn btn-warning" id="save_perbandingan" value="Hitung" /></div>
+                        <div class="col-md-12"><input type="submit" name="save_perbandingan" class="btn btn-warning" id="save_perbandingan" value="Hitung" /></div>
 
-                        </form>
+                      </form>
 
 
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-
+            <?php if(isset($ksd)){?>
 
               <div class="row">
                 <div class="col-lg-12 col-xl-12">
@@ -644,10 +650,10 @@
               </div>
 
 
-<hr>
+              <hr>
 
 
-              
+
               <div class="row">
                 <div class="col-lg-12 col-xl-12">
                   <div id="accordionWrap1" role="tablist" aria-multiselectable="true">
@@ -794,27 +800,14 @@
                             </div>
                           </div>
                         </div>
-
-
                       </div>
-
-
-
                     </div>
                   </div>
                 </div>
-
               </div>
 
+            <?php } ?>
 
-              
-
-
-              
-
-
-
-
-            </div>
           </div>
         </div>
+      </div>

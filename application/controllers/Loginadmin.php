@@ -13,7 +13,7 @@ class Loginadmin extends CI_Controller{
 
         $cekuser = $this->Mymod->CekDataRows('user',['user_username' => $user_username, 'user_role' => 'admin'])->num_rows();
         if($cekuser==0){
-            $this->session->set_flashdata('error', 'Username atau password anda salah');
+            $this->session->set_flashdata('Username atau password anda salah', 'error');
             redirect('loginadmin');
         } else {
 
@@ -28,7 +28,7 @@ class Loginadmin extends CI_Controller{
                 $this->session->set_userdata($newdata);
                 redirect(); 
             }else{
-                $this->session->set_flashdata('success', 'Username atau password anda salah');
+                $this->session->set_flashdata('Username atau password anda salah', 'success');
                 redirect('loginadmin'); 
             }
         }
@@ -37,7 +37,7 @@ class Loginadmin extends CI_Controller{
 
 
     public function gagallogin(){
-        $this->session->set_flashdata('error', 'Username atau password anda salah');
+        $this->session->set_flashdata('Username atau password anda salah', 'error');
         redirect('loginadmin');
     }
 
