@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2019 at 10:34 PM
+-- Generation Time: May 23, 2019 at 07:44 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -41,6 +41,27 @@ INSERT INTO `alternatif` (`alternatif_kode`, `alternatif_nama`) VALUES
 ('A1', 'Alter 1'),
 ('A2', 'Alter 2'),
 ('A3', 'Alter 3');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `hasil_rank`
+--
+
+CREATE TABLE `hasil_rank` (
+  `hr_id` int(11) NOT NULL,
+  `alternatif_kode` varchar(5) NOT NULL,
+  `hr_value` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `hasil_rank`
+--
+
+INSERT INTO `hasil_rank` (`hr_id`, `alternatif_kode`, `hr_value`) VALUES
+(47, 'A1', 0.438),
+(48, 'A2', 0.267),
+(49, 'A3', 0.836);
 
 -- --------------------------------------------------------
 
@@ -139,18 +160,6 @@ INSERT INTO `parameter` (`parameter_id`, `kriteria_kode`, `parameter_ukuran`, `p
 -- --------------------------------------------------------
 
 --
--- Table structure for table `perbandingan`
---
-
-CREATE TABLE `perbandingan` (
-  `perbandingan_id` int(11) NOT NULL,
-  `kriteria_kode_x` varchar(5) NOT NULL,
-  `perbandingan_value` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `sub_kriteria`
 --
 
@@ -196,6 +205,13 @@ ALTER TABLE `alternatif`
   ADD PRIMARY KEY (`alternatif_kode`);
 
 --
+-- Indexes for table `hasil_rank`
+--
+ALTER TABLE `hasil_rank`
+  ADD PRIMARY KEY (`hr_id`),
+  ADD KEY `alternatif_kode` (`alternatif_kode`);
+
+--
 -- Indexes for table `kriteria`
 --
 ALTER TABLE `kriteria`
@@ -217,13 +233,6 @@ ALTER TABLE `parameter`
   ADD KEY `kriteria_kode` (`kriteria_kode`);
 
 --
--- Indexes for table `perbandingan`
---
-ALTER TABLE `perbandingan`
-  ADD PRIMARY KEY (`perbandingan_id`),
-  ADD KEY `nilai_id` (`kriteria_kode_x`);
-
---
 -- Indexes for table `sub_kriteria`
 --
 ALTER TABLE `sub_kriteria`
@@ -241,6 +250,12 @@ ALTER TABLE `user`
 --
 
 --
+-- AUTO_INCREMENT for table `hasil_rank`
+--
+ALTER TABLE `hasil_rank`
+  MODIFY `hr_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+
+--
 -- AUTO_INCREMENT for table `nilai`
 --
 ALTER TABLE `nilai`
@@ -253,12 +268,6 @@ ALTER TABLE `parameter`
   MODIFY `parameter_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
--- AUTO_INCREMENT for table `perbandingan`
---
-ALTER TABLE `perbandingan`
-  MODIFY `perbandingan_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
-
---
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
@@ -267,6 +276,12 @@ ALTER TABLE `user`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `hasil_rank`
+--
+ALTER TABLE `hasil_rank`
+  ADD CONSTRAINT `hasil_rank_ibfk_1` FOREIGN KEY (`alternatif_kode`) REFERENCES `alternatif` (`alternatif_kode`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `nilai`
