@@ -146,6 +146,7 @@
 										<label>Role: </label>
 										<select name="role" class="form-control">
 											<option value="admin">Admin</option>
+											<option value="supervisor">Supervisor</option>
 										</select>
 									</div>
 								</div>

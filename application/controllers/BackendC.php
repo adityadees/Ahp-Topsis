@@ -110,7 +110,9 @@ class BackendC extends CI_Controller{
 
 		}
 
-
+		if($_SESSION['user_role'] == 'supervisor') :
+			$this->data['hasil_report']     = $this->db->query("SELECT * from hasil_rank INNER JOIN alternatif on hasil_rank.alternatif_kode=alternatif.alternatif_kode order by hasil_rank.hr_value desc")->result();
+		endif;
 		$this->load->view('backend/layout/header',$y);
 		$this->load->view('backend/layout/topbar');
 		$this->load->view('backend/layout/sidebar');

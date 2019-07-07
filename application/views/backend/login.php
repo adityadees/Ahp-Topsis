@@ -31,7 +31,7 @@ data-open="click" data-menu="vertical-menu" data-col="1-column">
               <div class="card-header border-0">
                 <div class="card-title text-center">
                   <div class="p-1">
-                    AHP - Topsis
+                    XL - AXIATA
                   </div>
                 </div>
                 <h6 class="card-subtitle line-on-side text-muted text-center font-small-3 pt-2">

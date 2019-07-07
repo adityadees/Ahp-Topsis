@@ -9,7 +9,7 @@
         </li>
         <li class="nav-item mr-auto">
           <a class="navbar-brand" href="<?= base_url();?>admin">
-            <h2 class="brand-text">AHP-TOPSIS</h2>
+            <h2 class="brand-text">XL - AXIATA</h2>
           </a>
         </li>
         <li class="nav-item d-none d-md-block nav-toggle">

@@ -11,7 +11,7 @@ class Loginadmin extends CI_Controller{
         $user_username=strip_tags(str_replace("'", "", $this->input->post('user_username',TRUE)));
         $user_password=strip_tags(str_replace("'", "", $this->input->post('user_password',TRUE)));
 
-        $cekuser = $this->Mymod->CekDataRows('user',['user_username' => $user_username, 'user_role' => 'admin'])->num_rows();
+        $cekuser = $this->Mymod->CekDataRows('user',['user_username' => $user_username])->num_rows();
         if($cekuser==0){
             $this->session->set_flashdata('Username atau password anda salah', 'error');
             redirect('loginadmin');
@@ -22,6 +22,7 @@ class Loginadmin extends CI_Controller{
                 $xcadmin=$cadmin->row_array();
                 $newdata = array(
                     'user_username'   => $xcadmin['user_username'],
+                    'user_role'   => $xcadmin['user_role'],
                     'logged_in' => TRUE
                 );
 
