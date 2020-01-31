@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 23, 2019 at 07:44 AM
+-- Generation Time: Jan 31, 2020 at 09:33 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.3
 
@@ -59,9 +59,9 @@ CREATE TABLE `hasil_rank` (
 --
 
 INSERT INTO `hasil_rank` (`hr_id`, `alternatif_kode`, `hr_value`) VALUES
-(47, 'A1', 0.438),
-(48, 'A2', 0.267),
-(49, 'A3', 0.836);
+(47, 'A1', 0.434),
+(48, 'A2', 0.341),
+(49, 'A3', 0.792);
 
 -- --------------------------------------------------------
 
@@ -184,7 +184,7 @@ CREATE TABLE `user` (
   `user_tel` char(12) NOT NULL,
   `user_alamat` text NOT NULL,
   `user_jk` enum('L','P') NOT NULL,
-  `user_role` enum('admin') NOT NULL
+  `user_role` enum('admin','supervisor') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -192,7 +192,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_id`, `user_username`, `user_password`, `user_nama`, `user_email`, `user_tel`, `user_alamat`, `user_jk`, `user_role`) VALUES
-(7, 'adityads', '202cb962ac59075b964b07152d234b70', 'Aditya Dharmawan Saputra', 'adityads@ymail.com', '082371373347', '', 'L', 'admin');
+(7, 'adityads', '202cb962ac59075b964b07152d234b70', 'Aditya Dharmawan Saputra', 'adityads@ymail.com', '082371373347', '', 'L', 'admin'),
+(8, 'super', '202cb962ac59075b964b07152d234b70', 'super', 'super@aaa.com', '08999', 'aaa', 'L', 'supervisor');
 
 --
 -- Indexes for dumped tables
@@ -271,7 +272,7 @@ ALTER TABLE `parameter`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
